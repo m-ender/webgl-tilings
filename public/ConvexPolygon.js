@@ -87,6 +87,164 @@ ConvexPolygon.CreateArrow = function(length, width, origin, direction, color)
     return new ConvexPolygon(vertices, color);
 };
 
+// Convenience constructor for pentagrams (i.e. this returns a new
+// ConvexPolygon, with vertices set up as necessary).
+// Length is the length of each of the ten edges.
+// Tip is vertex on the vertical axis.
+// Inverted is a boolean which will mirror the pentagram on the 
+// horizontal through the tip.
+// The pentagram is not actually a convex polygon, but its interior
+// is rendered correctly by the ConvexPolygon class anyway, because 
+// its center is listed as the first vertex.
+ConvexPolygon.CreatePentagram = function(length, tip, inverted, color)
+{
+    // Get inner and outer radius 
+    // (see http://mathworld.wolfram.com/Pentagram.html)
+    var r = phi * phi * length * sqrt((25-11*sqrt(5))/10);
+    var R = phi * phi * length * sqrt((5-sqrt(5))/10);
+
+    // Get origin
+    var x = tip.x;
+    var y = inverted ? tip.y + R : tip.y - R;
+
+    var vertices = [];
+
+    var angle = inverted ? pi/2 : -pi/2;
+
+    for (var i = 0; i <= 10; ++i, angle += pi/5)
+        vertices.push({
+            x: x + cos(angle) * (i%2 ? R : r),
+            y: y + sin(angle) * (i%2 ? R : r)
+        });
+
+    return new ConvexPolygon(vertices, color);
+};
+
+
+
+// Convenience constructor for rhombs (i.e. this returns a new
+// ConvexPolygon, with vertices set up as necessary).
+// Length is the length of each edge.
+// Tip is one reference vertex.
+// Direction is an integer in the range [0,4] which determines
+// the axis that connects the tip to the opposite vertex.
+ConvexPolygon.CreateRhomb = function(length, tip, direction, color)
+{
+    var axis = direction * 2 * pi / 5;
+
+    // Half of the acute angle
+    var halfAngle = pi / 5;
+
+    vertices = [
+        {
+            x: tip.x,
+            y: tip.y
+        },
+        {
+            x: tip.x + length * cos(axis - halfAngle),
+            y: tip.y + length * sin(axis - halfAngle)
+        },
+        {
+            x: tip.x + phi * length * cos(axis),
+            y: tip.y + phi * length * sin(axis)
+        },
+        {
+            x: tip.x + length * cos(axis + halfAngle),
+            y: tip.y + length * sin(axis + halfAngle)
+        },
+    ];
+
+    return new ConvexPolygon(vertices, color);
+};
+
+// Convenience constructor for golden triangles rhombs (i.e. 
+// this returns a new ConvexPolygon, with vertices set up as 
+// necessary).
+// Length is the length of each edge.
+// Tip is one reference vertex.
+// Direction is an integer in the range [0,4] which determines
+// the axis that connects the tip to the opposite vertex.
+ConvexPolygon.CreateTriangle = function(length, tip, direction, color)
+{
+    var axis = direction * 2 * pi / 5;
+
+    // Half of the acute angle
+    var acuteAngle = pi / 5;
+
+    vertices = [
+        {
+            x: tip.x,
+            y: tip.y
+        },
+        {
+            x: tip.x + phi * length * cos(axis),
+            y: tip.y + phi * length * sin(axis)
+        },
+        {
+            x: tip.x + length * cos(axis + acuteAngle),
+            y: tip.y + length * sin(axis + acuteAngle)
+        },
+    ];
+
+    return new ConvexPolygon(vertices, color);
+};
+
+// Convenience constructor for THAT octagon (i.e. 
+// this returns a new ConvexPolygon, with vertices set up as 
+// necessary).
+// Length is the length of each edge.
+// Nudge is one concave reference vertex.
+// Direction is an integer in the range [0,4] which determines
+// the axis that connects the tip to the opposite vertex.
+ConvexPolygon.CreateOctagon = function(length, nudge, direction, color)
+{
+    var axis = direction * 2 * pi / 5;
+
+    // Half of the acute angle
+    var halfAngle = pi / 5;
+
+    var angle = axis - 3*halfAngle;
+
+    vertices = [
+        {
+            x: x = nudge.x,
+            y: y = nudge.y
+        },
+        {
+            x: x += length * cos(angle),
+            y: y += length * sin(angle)
+        },
+        {
+            x: x += length * cos(angle += 2*halfAngle),
+            y: y += length * sin(angle)
+        },
+        {
+            x: x += length * cos(angle += 2*halfAngle),
+            y: y += length * sin(angle)
+        },
+        {
+            x: x += length * cos(angle += 2*halfAngle),
+            y: y += length * sin(angle)
+        },
+        {
+            x: x += length * cos(angle -= halfAngle),
+            y: y += length * sin(angle)
+        },
+        {
+            x: x += length * cos(angle += 2*halfAngle),
+            y: y += length * sin(angle)
+        },
+        {
+            x: x += length * cos(angle += 2*halfAngle),
+            y: y += length * sin(angle)
+        },
+    ];
+
+    return new ConvexPolygon(vertices, color);
+};
+
+
+
 ConvexPolygon.prototype.hide = function() { this.hidden = true; };
 ConvexPolygon.prototype.show = function() { this.hidden = false; };
 

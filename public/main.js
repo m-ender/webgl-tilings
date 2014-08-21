@@ -96,23 +96,7 @@ function init()
 
     // Set up a bit of geometry to render
 
-    var i;
-    for (i = 0; i < 11; ++i)
-        circles.push(new Circle(-0.5 + 0.1*i, 0, colorGenerator.next(true), markerRadius));
-
-    var points = [];
-    for (i = 0; i < 5; ++i)
-        points.push({
-            x: 0.7*cos(2*pi/5*i),
-            y: 0.7*sin(2*pi/5*i),
-        });
-    polygons.push(new ConvexPolygon(points));
-
-    polygons.push(ConvexPolygon.CreateArrow(0.1, 0.05, {x:-0.7, y:0}, {x:1,y:0}));
-    polygons.push(ConvexPolygon.CreateArrow(0.1, 0.05, {x:0.73, y:0}, {x:1,y:0}));
-
-    lines.push(new Line({x: -0.5, y: 0.15}, {x: 0.5, y: 0.15}, 'white', lineThickness));
-    lines.push(new Line({x: -0.5, y: -0.15}, {x: 0.5, y: -0.15}, 'white', lineThickness));
+    polygons.push(ConvexPolygon.CreatePentagram(0.5, {x:0, y:0}));
 
     drawScreen();
     lastTime = Date.now();

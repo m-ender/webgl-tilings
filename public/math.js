@@ -1,6 +1,7 @@
 // A few math functions and constants for convenience
 
 var pi = Math.PI;
+var phi = (1 + Math.sqrt(5))/2;
 
 var abs = Math.abs;
 var sqrt = Math.sqrt;
